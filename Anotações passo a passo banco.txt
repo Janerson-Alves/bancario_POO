@@ -1,0 +1,115 @@
+**Claro!** Vamos incorporar os conceitos de **ABC (Abstract Base Classes)**, **abstractmethod** e **abstractproperty** em nosso projeto de sistema bancário. Aqui está como podemos aplicá-los:
+
+1. **Classe Histórico:**
+   - Crie uma classe chamada "Histórico".
+   - Inclua um atributo privado chamado "_historico". Este atributo será uma lista usada para armazenar as transações.
+   - Implemente um método público chamado "adicionarTransacao":
+     - Este método deve aceitar um parâmetro "transacao".
+     - Adicione o objeto de transação fornecido à lista "_historico".
+
+2. **Interface Transacao (ABC):**
+   - Crie uma classe abstrata chamada "Transacao" que herda da classe `ABC` (Abstract Base Classes).
+   - Defina um método abstrato chamado "registrar":
+     - Este método deve ser abstrato e aceitar um parâmetro "saldo".
+     - O propósito deste método é registrar uma transação, mas a implementação específica dependerá das classes que herdam de "Transacao".
+     - Use o decorador `@abstractmethod` para garantir que qualquer classe que herde de "Transacao" implemente este método.
+
+   - Abstração: A abstração é um dos princípios fundamentais da programação orientada a objetos (POO).
+   Ela permite que você modele objetos do mundo real em termos de suas características essenciais, ignorando os detalhes irrelevantes.
+   Na POO, você cria classes abstratas para definir um modelo genérico ou uma interface comum que outras classes podem herdar ou implementar.
+   -- Classes Abstratas: Uma classe abstrata é uma classe que não pode ser instanciada diretamente. Ela serve como um modelo para outras classes.
+   A principal função de uma classe abstrata é definir métodos e atributos que devem ser implementados pelas classes filhas.
+   Classes abstratas fornecem uma estrutura comum para classes relacionadas, garantindo que elas sigam um contrato específico.
+   - Classe Transacao como Abstrata:A classe Transacao é projetada para ser uma interface comum para diferentes tipos de transações bancárias (como depósitos, saques, transferências etc.).
+   Ela é abstrata porque não faz sentido criar uma instância direta de uma transação genérica. Em vez disso, queremos que as classes específicas (como Deposito e Saque) herdem dela e forneçam implementações específicas.
+   O método abstrato registrar na classe Transacao define um contrato que todas as classes filhas devem seguir. Cada tipo de transação deve implementar esse método de acordo com seu comportamento específico.
+   Benefícios da Abstração:
+   Reutilização de Código: A abstração permite que você defina funcionalidades comuns em uma classe base e reutilize-as em várias classes filhas.
+   Flexibilidade: As classes abstratas permitem que você adicione novos tipos de transações no futuro sem alterar o código existente.
+   Polimorfismo: Através da abstração, você pode tratar diferentes tipos de transações de forma uniforme, mesmo que suas implementações sejam diferentes.
+   Em resumo, a classe Transacao é abstrata para fornecer uma estrutura comum para todas as transações e garantir que cada tipo de transação siga o contrato definido pela interface. Isso nos ajuda a criar um sistema bancário flexível e extensível.
+
+3. **Classes Deposito e Saque:**
+   - Crie classes chamadas "Deposito" e "Saque", ambas implementando a interface "Transacao".
+   - Implemente o método “registrar” em ambas as classes:
+     - Para a classe "Deposito":
+       - O método deve adicionar uma transação de depósito ao histórico da conta e aumentar o saldo da conta.
+       - Recebe dois parâmetros: "saldo" (o valor do depósito) e "conta" (a conta na qual o depósito será registrado).
+       - Usa o método "adicionarTransacao" da conta para registrar a transação no histórico.
+       - Usa o método "depositar" da conta para aumentar o saldo.
+     - Para a classe "Saque":
+       - O método deve tentar realizar um saque. Se bem-sucedido, adiciona a transação ao histórico da conta e diminui o saldo.
+       - Recebe dois parâmetros: "saldo" (o valor a ser sacado) e "conta" (a conta da qual o valor será sacado).
+       - Primeiro, verifica se o saque é possível usando o método "sacar" da conta.
+       - - Usa o método "sacar" da conta para verificar se há saldo na conta
+       - Se o saque for bem-sucedido, usa "adicionarTransacao" para registrar a transação no histórico.
+       - Caso contrário, exibe uma mensagem de erro indicando saldo insuficiente.
+   - Referência à Classe Base: Dentro dos métodos registrar das classes Deposito e Saque, você deve se referir à instância da classe (ou seja, à conta específica) em vez de usar Transacao. A classe base Transacao não representa uma instância específica de transação.
+   Use o atributo self para se referir à instância da classe.
+   Adição e Subtração de Transações:
+   No método registrar da classe Deposito, você deve adicionar a transação à lista de históricos da conta.
+   No método registrar da classe Saque, você deve fazer o mesmo, mas subtraindo o valor da transação (já que é um saque).
+   
+
+4. **Classe Conta (Classe Abstrata):**
+   - Crie uma classe abstrata chamada “Conta”, que herda de `ABC`.
+   - Adicione atributos privados para:
+     - saldo (iniciado com zero)
+     - número da conta
+     - cliente
+     - agência
+     - histórico (inicializado com uma nova instância de `Historico()`)
+   - Implemente métodos de propriedades abstratos para:
+     - criar nova conta
+     - sacar dinheiro
+     - depositar dinheiro
+   - Implemente um método não abstrato para verificar o saldo, que retorna o valor do atributo saldo.
+   - Utilize o decorador `@property` juntamente com `@abstractmethod` para definir propriedades abstratas para os atributos `saldo` e `número da conta`, garantindo assim que sejam implementadas em subclasses e que o acesso a esses atributos seja controlado de maneira segura.
+   - As propriedades abstratas garantem que cada subclasse de `Conta` forneça sua própria implementação para acessar esses atributos.
+
+5. **Classe ContaCorrente (Classe Filha de Conta):**
+   - Herde esta classe da classe Conta.
+   - Adicione atributos específicos como:
+     - limite (valor máximo além do saldo que o cliente pode sacar)
+     - limite de saques (número máximo de saques permitidos em um período definido)
+   - Sobrescreva métodos conforme necessário para implementar o comportamento específico da conta corrente.
+   - Implemente métodos para:
+     - criar nova conta, retornando o número da conta.
+     - saldo, retorna  o saldo disponível.
+     - numero da conta, retornando o número da conta.
+     - depositar dinheiro,adicione o parametro valor(valor de deposito), e somar com o saldo da conta para atualizar o saldo e retornando uma mensagem de confirmação.
+     - sacar dinheiro, acrescentar o parâmetro valor, verificando se o valor do saque não excede o saldo(´parâmetro valor) mais o limite e se ainda há saques disponíveis, atualizando o saldo e o limite de saques, e retornando uma mensagem de status.
+   - Defina a representação string da classes sse para mostrar informações relevantes sobre a conta corrente.
+
+6. **Classe Cliente (Classe Abstrata):**
+   - Crie uma classe abstrata chamada “Cliente”.
+   - Inclua atributos privados para:
+     - endereço (uma string que representa o endereço do cliente)
+     - contas (uma lista que irá armazenar objetos das contas associadas ao cliente)
+   - Implemente métodos para:
+     - realizar transações (deve aceitar um objeto de transação como argumento e aplicar esta transação nas contas do cliente)
+     - adicionar contas (aceita um objeto de conta como argumento e o adiciona à lista de contas do cliente)
+   - Defina propriedades abstratas para os atributos de endereço e contas para garantir que subclasses forneçam implementações específicas.
+
+7. **Classe PessoaFisica (Classe Filha de Cliente):**
+   - Faça esta classe herdar da classe Cliente.
+   - Inclua novos atributos específicos como CPF, nome e data de nascimento.
+   - Implemente o método "realizar_transacao" para adicionar transações às contas do cliente.
+   - Defina propriedades para o atributo de endereço, incluindo um setter para permitir alterações.
+   - Defina a propriedade "contas" para acessar as contas associadas ao cliente.
+   - Implemente a representação string da classe para mostrar informações relevantes do cliente, como nome, CPF e data de nascimento.
+
+testes
+
+# Criando uma instância de PessoaFisica
+pessoa = PessoaFisica(endereco='Rua x 123', cpf='1234', nome='Jaan', data_nascimento='26/06/1997')
+print(pessoa)
+
+# Criando uma conta bancária
+conta_corrente = ContaCorrente(numero_conta='12345', cliente=pessoa, agencia=1, limite=1000, limite_saque=5)
+print(conta_corrente)
+
+
+print(conta_corrente.depositar(500))
+conta_corrente.sacar(100)
+print(conta_corrente.saldo())
